@@ -2,34 +2,41 @@ package com.example.lib;
 import java.util.Scanner;
 public class MyClass {
 
-    public static void main(String[] args) {
-        int Year=0,Month=0,Day=0,TotalDay=0;
-        int MonthDay[]={31,28,31,30,31,30,31,31,30,31,30,31};
-        boolean LeapYear=false;
+   public static void main(String[] args) {
+        char IDcardBeginning[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R',
+                'S', 'T', 'U', 'V', 'X', 'Y', 'W', 'Z', 'I', 'O'};
+        char BeginningIDN[] = {'0', '0'};
+        int DetectionNumber = 0;
         Scanner scanner = new Scanner(System.in);
-        System.out.println("請輸入西元年 月 日");
-        Year = scanner.nextInt();
-        Month = scanner.nextInt();
-        Day = scanner.nextInt();
-        if(Year%4!=0)
-            LeapYear=false;
-        else if(Year%100!=0)
-            LeapYear=true;
-        else if(Year%400!=0)
-            LeapYear=false;
-        else
-            LeapYear=true;
-        if(LeapYear==true)
-            MonthDay[1]=29;
-        if(Month>12)
-            System.out.println("請輸入正確月份!");
-        else if(MonthDay[Month-1]<Day)
-            System.out.printf("輸入錯誤!!%d年的%d月只有%d天\n",Year,Month,MonthDay[Month-1]);
-        else {
-            for(int i=Month-2;i>=0;--i){
-                TotalDay+=MonthDay[i];
+        System.out.println("請輸入身分證字號:");
+        String IDNumber = scanner.next();
+        char[] IDNumberIndividual = new char[11];
+        if (IDNumber.length() > 10 || IDNumber.length() < 10) {
+            System.out.println("身分證字號數錯誤");
+        } else {
+            IDNumberIndividual[0] = IDNumber.charAt(0);
+            for (int i = 2; i < 11; i++) {
+                IDNumberIndividual[i] = IDNumber.charAt(i - 1);
             }
-            TotalDay+=Day;
-            System.out.printf("這天是今年第%d天\n",TotalDay);
+            for (int i = 0; i < 26; i++) {
+                if (IDNumberIndividual[0] == IDcardBeginning[i]) {
+                    IDNumberIndividual[0] = String.valueOf(1 + (i / 10)).charAt(0);
+                    IDNumberIndividual[1] = String.valueOf((i % 10)).charAt(0);
+                }
+            }
+
+            for (int i = 0; i < 11; i++) {
+                if (i == 0 || i == 10) {
+                    DetectionNumber += Integer.parseInt(String.valueOf(IDNumberIndividual[i]));
+                } else {
+                    DetectionNumber += (10 - i) * Integer.parseInt(String.valueOf(IDNumberIndividual[i]));
+                }
+            }
+            if (DetectionNumber % 10 == 0) {
+                System.out.println("正確的身分證號");
+            }
+            else {
+                System.out.println("不正確的身分證號");
+            }
         }
     }}
